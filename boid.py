@@ -18,6 +18,8 @@ class Boid(object):
         self.screen.blit(self.image, (self.position.x, self.position.y))
 
     def update(self):
+        pos = pygame.mouse.get_pos()
+
         self.position.x += self.velocity.x
         self.position.y += self.velocity.y
 
@@ -34,10 +36,10 @@ class Boid(object):
             self.position.y = -r
 
 
-def spawn(screen):
+def spawn(screen, number):
     boid_list = []
     # creating 10 boids
-    for i in range(100):
+    for i in range(number):
         boid = Boid(screen)
         boid_list.append(boid)
     return boid_list
@@ -79,7 +81,6 @@ def rule_two(boid_lis):
 
         c_list.append(zero)
 
-
     for i in range(ran):
         boid_lis[i].velocity.x -= c_list[i].x
         boid_lis[i].velocity.y -= c_list[i].y
@@ -97,10 +98,31 @@ def rule_three(boid_list):
                 delta_x += boid_list[j].velocity.x / norm_len
                 delta_y += boid_list[j].velocity.y / norm_len
 
-        new_x = (boid_list[i].velocity.x - delta_x)/8
-        new_y = (boid_list[i].velocity.y - delta_y)/8
+        new_x = (boid_list[i].velocity.x - delta_x) / 8
+        new_y = (boid_list[i].velocity.y - delta_y) / 8
         new_vel.append(Vec(new_x, new_y))
 
     for i in range(len(new_vel)):
         boid_list[i].velocity.x -= new_vel[i].x
         boid_list[i].velocity.y -= new_vel[i].y
+
+def rule_four(boid_list):
+    pos = pygame.mouse.get_pos()
+    delta_x = []
+    delta_y = []
+    temp_x = 0
+    temp_y = 0
+    for i in boid_list:
+        temp_x = i.position.x - pos[0]
+        temp_y = i.position.y - pos[1]
+        delta_x.append(temp_x)
+        delta_y.append(temp_y)
+
+    for i in range(len(boid_list)):
+        boid_list[i].velocity.x -= delta_x[i]/100
+        boid_list[i].velocity.y -= delta_y[i]/100
+
+#def rule_five(list_boids):
+
+
+
